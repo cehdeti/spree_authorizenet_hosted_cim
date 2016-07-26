@@ -23,6 +23,29 @@ Spree::CheckoutController.class_eval do
     false
   end
 
-  def authorizenet_customer_id
+  # Overridden from `spree_frontend`.
+  #
+  # Removes the stock check so that our order doesn't get cleared out, since we
+  # don't have any shipments yet. That functionality is moved to the
+  # `before_confirm` method below.
+  def before_payment
+    if try_spree_current_user && try_spree_current_user.respond_to?(:payment_sources)
+      @payment_sources = try_spree_current_user.payment_sources
+    end
+  end
+
+  # NOTE: If the upstream `spree_frontend` definition of this controller ever
+  # implements this method, we'll need to add that in here.
+  raise "`before_confirm` method already imeplement in `spree_frontend`" \
+    if method_defined?(:before_confirm) || private_method_defined?(:before_confirm)
+
+  def before_confirm
+    if @order.checkout_steps.include? "delivery"
+      packages = @order.shipments.map(&:to_package)
+      @differentiator = Spree::Stock::Differentiator.new(@order, packages)
+      @differentiator.missing.each do |variant, quantity|
+        @order.contents.remove(variant, quantity)
+      end
+    end
   end
 end
