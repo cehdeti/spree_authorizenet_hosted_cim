@@ -10,4 +10,3 @@ Deface::Override.new(
     } if @authorizenet_form_url %>
   TEXT
 )
-

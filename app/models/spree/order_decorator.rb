@@ -1,5 +1,3 @@
-require 'pp'
-
 Spree::Order.class_eval do
   # Redefine the checkout flow to place the `payment` step before the `address`
   # step, since the user is required to enter their billing address on

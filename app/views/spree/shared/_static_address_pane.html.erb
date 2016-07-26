@@ -1,0 +1,47 @@
+<div class="panel panel-default" id="billing" data-hook>
+  <div class="panel-heading">
+    <h3 class="panel-title"><%= title %></h3>
+  </div>
+  <div class="panel-body">
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>First Name</th>
+          <td><%= address.firstname %>
+        </tr>
+        <tr>
+          <th>Last Name</th>
+          <td><%= address.lastname %>
+        </tr>
+        <tr>
+          <th>Street Address</th>
+          <td><%= address.address1 %>
+        </tr>
+        <tr>
+          <th>Street Address (cont'd)</th>
+          <td><%= address.address2 %>
+        </tr>
+        <tr>
+          <th>City</th>
+          <td><%= address.city %>
+        </tr>
+        <tr>
+          <th>Country</th>
+          <td><%= address.country.try(:name) %>
+        </tr>
+        <tr>
+          <th>State</th>
+          <td><%= address.state.try(:name) %>
+        </tr>
+        <tr>
+          <th>Zip</th>
+          <td><%= address.zipcode %>
+        </tr>
+        <tr>
+          <th>Phone</th>
+          <td><%= address.phone %>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
