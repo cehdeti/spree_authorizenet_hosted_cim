@@ -10,8 +10,14 @@ module Spree
     def add_payment
       customer_id = session[:authorizenet_customer_id]
       session[:authorizenet_customer_id] = nil
-      Spree::Gateway::AuthorizeNetCim.first
-        .create_credit_cards_from_customer_profile(customer_id, try_spree_current_user)
+
+      try
+        Spree::Gateway::AuthorizeNetCim.first
+          .create_credit_cards_from_customer_profile(customer_id, try_spree_current_user)
+      rescue => ex
+        flash[:error] = ex.message
+      end
+
       head :no_content
     end
 
