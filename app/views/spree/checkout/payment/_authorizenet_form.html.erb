@@ -1,0 +1,17 @@
+<form style="display: none" id="authorizenet-hosted-form" method="post" action="<%= form_url %>" target="authorizenet_iframe">
+  <input type="hidden" name="token" value="<%= token %>" />
+</form>
+
+<div id="authorizenet-hosted-form-modal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">New Payment Method</h4>
+      </div>
+      <div class="modal-body">
+        <iframe name="authorizenet_iframe" id="authorizenet_iframe" frameborder="0" scrolling="no" style="width: 435px; height: 508px;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>

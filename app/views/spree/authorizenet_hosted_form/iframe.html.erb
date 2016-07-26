@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>IFrame Communicator</title>
+    <script type="text/javascript">
+    //<![CDATA[
+
+    (function(window) {
+      function mainPage() {
+        if (window && window.parent && window.parent.parent) {
+          return window.parent.parent;
+        }
+      }
+
+      var eventHandler = function(event) {
+        return mainPage().AuthorizenetHostedForm.handleEvent(event);
+      }
+
+      if (window.addEventListener) {
+        window.addEventListener("message", eventHandler, false);
+      } else if (window.attachEvent) {
+        window.attachEvent("onmessage", eventHandler);
+      }
+    })(window);
+
+    //]]>
+    </script>
+  </head>
+  <body></body>
+</html>

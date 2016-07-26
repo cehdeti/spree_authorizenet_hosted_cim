@@ -1,0 +1,39 @@
+<div class="panel panel-default" id="payment" data-hook>
+  <div class="panel-heading">
+    <h3 class="panel-title"><%= Spree.t(:payment_information) %></h3>
+  </div>
+  <div class="panel-body" data-hook="checkout_payment_step">
+    <% if @payment_sources.present? %>
+      <div class="form-group" data-hook="existing_cards">
+        <table class="existing-credit-card-list">
+          <tbody>
+            <% @payment_sources.each do |card| %>
+              <tr id="<%= dom_id(card,'spree')%>" class="<%= cycle('even', 'odd') %>">
+                <td>
+                  <%= radio_button_tag "order[existing_card]", card.id, (card == @payment_sources.first), { class: "existing-cc-radio" }  %>
+                </td>
+                <td><%= card.cc_type.humanize %> ending in <%= card.last_digits %> (<%= card.name %>)</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        <button id="authorizenet-open-hosted-form" class="btn btn-default">
+          Add a new payment method
+        </button>
+      </div>
+    <% end %>
+
+    <%= render partial: 'spree/checkout/payment/storecredit' %>
+
+    <p class='field' data-hook='coupon_code'>
+      <%= form.label :coupon_code %>
+      <%= form.text_field :coupon_code, :class => 'form-control' %>
+    </p>
+  </div>
+</div>
+
+<div class="well text-right form-buttons" data-hook="buttons">
+  <%= submit_tag Spree.t(:save_and_continue), class: 'btn btn-lg btn-success primary' %>
+  <script>Spree.disableSaveOnClick();</script>
+</div>
