@@ -11,7 +11,7 @@ module Spree
       customer_id = session[:authorizenet_customer_id]
       session[:authorizenet_customer_id] = nil
 
-      try
+      begin
         Spree::Gateway::AuthorizeNetCim.first
           .create_credit_cards_from_customer_profile(customer_id, try_spree_current_user)
       rescue => ex
