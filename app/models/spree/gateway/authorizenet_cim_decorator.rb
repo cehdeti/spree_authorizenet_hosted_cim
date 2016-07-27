@@ -53,19 +53,7 @@ Spree::Gateway::AuthorizeNetCim.class_eval do
   private
 
   def create_credit_card_from_customer_payment_profile(profile, customer_profile_id, user)
-    address = Spree::Address.new(
-      firstname: profile['bill_to']['first_name'],
-      lastname: profile['bill_to']['last_name'],
-      address1: profile['bill_to']['address'],
-      city: profile['bill_to']['city'],
-      zipcode: profile['bill_to']['zip'],
-      phone: profile['bill_to']['phone_number'],
-      company: profile['bill_to']['company'],
-      state_name: profile['bill_to']['state']
-    )
-    address.country = Spree::Country.find_by_name(profile['bill_to']['country']) || Spree::Country.default
-    address.state = address.country.states.find_all_by_name_or_abbr(profile['bill_to']['state']).first
-    address.save!
+    address = create_address_from_customer_payment_profile(profile)
 
     now = Time.now.utc
     Spree::CreditCard.create!(
@@ -94,6 +82,25 @@ Spree::Gateway::AuthorizeNetCim.class_eval do
   # - user: The currently-logged-in user
   def create_bank_account_from_customer_payment_profile(profile, customer_profile_id, user)
     raise BankAccountsNotAccepted.new
+  end \
+    unless method_defined?(:create_bank_account_from_customer_payment_profile) || \
+      private_method_defined?(:create_bank_account_from_customer_payment_profile)
+
+  def create_address_from_customer_payment_profile(profile)
+    Spree::Address.new(
+      firstname: profile['bill_to']['first_name'],
+      lastname: profile['bill_to']['last_name'],
+      address1: profile['bill_to']['address'],
+      city: profile['bill_to']['city'],
+      zipcode: profile['bill_to']['zip'],
+      phone: profile['bill_to']['phone_number'],
+      company: profile['bill_to']['company'],
+      state_name: profile['bill_to']['state']
+    ).tap do |address|
+      address.country = Spree::Country.find_by_name(profile['bill_to']['country']) || Spree::Country.default
+      address.state = address.country.states.find_all_by_name_or_abbr(profile['bill_to']['state']).first
+      address.save!
+    end
   end
 
   class BankAccountsNotAccepted < RuntimeError
