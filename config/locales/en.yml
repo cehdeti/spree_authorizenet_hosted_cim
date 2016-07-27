@@ -2,3 +2,4 @@ en:
   spree:
     authorizenet_hosted_cim:
       bank_accounts_not_accepted: Bank account are not accepted
+      add_new_payment_method: Add a new payment method

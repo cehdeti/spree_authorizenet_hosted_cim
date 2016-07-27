@@ -12,7 +12,7 @@
                 <td>
                   <%= radio_button_tag "order[existing_card]", card.id, (card == @payment_sources.first), { class: "existing-cc-radio" }  %>
                 </td>
-                <td><%= card.cc_type.humanize %> ending in <%= card.last_digits %> (<%= card.name %>)</td>
+                <td><%= card.cc_type.humanize %> <%= Spree.t(:ending_in).downcase %> <%= card.last_digits %> (<%= card.name %>)</td>
               </tr>
             <% end %>
           </tbody>
@@ -20,7 +20,7 @@
       <% end %>
 
       <button id="authorizenet-open-hosted-form" class="btn btn-default">
-        Add a new payment method
+        <%= Spree.t('authorizenet_hosted_cim.add_new_payment_method') %>
       </button>
     </div>
 
