@@ -13,7 +13,7 @@ module Spree
 
       begin
         Spree::Gateway::AuthorizeNetCim.first
-          .create_credit_cards_from_customer_profile(customer_id, try_spree_current_user)
+          .create_payment_methods_from_customer_profile(customer_id, try_spree_current_user)
       rescue => ex
         flash[:error] = ex.message
       end

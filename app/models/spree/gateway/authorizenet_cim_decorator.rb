@@ -34,12 +34,19 @@ Spree::Gateway::AuthorizeNetCim.class_eval do
     cim_gateway.get_hosted_profile_url(action)
   end
 
-  def create_credit_cards_from_customer_profile(profile_id, user)
+  def create_payment_methods_from_customer_profile(profile_id, user)
     response = cim_gateway.get_customer_profile(customer_profile_id: profile_id)
     raise ::Spree::Core::GatewayError.new(response.message) unless response.success?
 
     Array.wrap(response.params['profile']['payment_profiles']).each do |profile|
-      create_credit_card_from_customer_payment_profile(profile, profile_id, user)
+      case
+      when profile['payment'].key?('credit_card')
+        create_credit_card_from_customer_payment_profile(profile, profile_id, user)
+      when profile['payment'].key?('bank_account')
+        create_bank_account_from_customer_payment_profile(profile, profile_id, user)
+      else
+        raise 'Unknown payment method type'
+      end
     end
   end
 
@@ -75,5 +82,25 @@ Spree::Gateway::AuthorizeNetCim.class_eval do
       user_id: user.id,
       payment_method_id: id
     )
+  end
+
+  # This is a stub method to handle bank accounts.
+  #
+  # If your store supports bank accounts as a payment method, override this
+  # method and save the bank account in your system.
+  #
+  # - profile: A hash of the payment profile from Authorize.net
+  # - customer_profile_id: The profile ID of the current customer
+  # - user: The currently-logged-in user
+  def create_bank_account_from_customer_payment_profile(profile, customer_profile_id, user)
+    raise BankAccountsNotAccepted.new
+  end
+
+  class BankAccountsNotAccepted < RuntimeError
+    def initialize; end
+
+    def message
+      Spree.t('authorizenet_hosted_cim.bank_accounts_not_accepted')
+    end
   end
 end
