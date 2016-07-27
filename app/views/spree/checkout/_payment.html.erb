@@ -12,7 +12,16 @@
                 <td>
                   <%= radio_button_tag "order[existing_card]", card.id, (card == @payment_sources.first), { class: "existing-cc-radio" }  %>
                 </td>
-                <td><%= card.cc_type.humanize %> <%= Spree.t(:ending_in).downcase %> <%= card.last_digits %> (<%= card.name %>)</td>
+                <td>
+                  <span class="cc-type">
+                    <% unless (cc_type = card.cc_type).blank? %>
+                      <%= image_tag "credit_cards/icons/#{cc_type}.png" %>
+                    <% end %>
+                    <% if card.last_digits %>
+                      <%= Spree.t(:ending_in) %> <%= card.last_digits %>
+                    <% end %>
+                  </span> (<span class="full-name"><%= card.name %></span>)
+                </td>
               </tr>
             <% end %>
           </tbody>
