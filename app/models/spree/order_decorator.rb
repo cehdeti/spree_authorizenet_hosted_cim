@@ -10,7 +10,15 @@ Spree::Order.class_eval do
     go_to_state :complete
   end
 
+  state_machine.after_transition from: :delivery, do: :update_payment_total_with_shipping
+
   private
+
+  def update_payment_total_with_shipping
+    payment = payments.valid.first
+    return unless payment && payment.amount != total
+    payment.update!(amount: total)
+  end
 
   # Overridden to grab the default billing/shipping addresses from the payment
   # method entered previously.
