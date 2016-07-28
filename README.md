@@ -12,6 +12,8 @@ don't have to be PCI compliant.
   interface.
 * Reworks the spree checkout process to more sensibly interact with the hosted
   form and its workflow.
+* Support for adding bank accounts as payment methods via the
+  [`spree_authorizenet_hosted_cim_bank_account`](https://github.com/cehdeti/spree_authorizenet_hosted_cim_bank_account) extension (or your own `BankAccount` class, if you are using another implementation).
 
 ## Installation
 
