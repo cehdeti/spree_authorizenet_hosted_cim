@@ -8,7 +8,7 @@ Spree::Gateway::AuthorizeNetCim.class_eval do
     response = cim_gateway.create_customer_profile(
       profile: {
         merchant_customer_id: "#{Time.now.to_f}",
-        email: order.user.email
+        email: order.user.try(:email)
       },
       validation_mode: :none
     )
