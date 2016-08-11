@@ -39,12 +39,18 @@ Spree::CheckoutController.class_eval do
   raise "`before_confirm` method already imeplement in `spree_frontend`" \
     if method_defined?(:before_confirm) || private_method_defined?(:before_confirm)
 
+  #this extension puts normal spree before_payment functionality in before_confirm
+  #the Spree Product Assembly extension doesn't want anything in before_payment
+  #so check if SpreeProductAssembly is installed and don't do anything if it is
+  #note, this may cause issues in the case where someone is using the Stock functionality
   def before_confirm
-    if @order.checkout_steps.include? "delivery"
-      packages = @order.shipments.map(&:to_package)
-      @differentiator = Spree::Stock::Differentiator.new(@order, packages)
-      @differentiator.missing.each do |variant, quantity|
-        @order.contents.remove(variant, quantity)
+    if !defined?(SpreeProductAssembly)
+      if @order.checkout_steps.include? "delivery"
+        packages = @order.shipments.map(&:to_package)
+        @differentiator = Spree::Stock::Differentiator.new(@order, packages)
+        @differentiator.missing.each do |variant, quantity|
+          @order.contents.remove(variant, quantity)
+        end
       end
     end
   end
