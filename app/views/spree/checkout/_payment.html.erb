@@ -3,72 +3,42 @@
     <h3 class="panel-title"><%= Spree.t(:payment_information) %></h3>
   </div>
   <div class="panel-body" data-hook="checkout_payment_step">
-
-    <div class="card_options">
-      <%= radio_button_tag 'use_existing_card', 'yes', true %>
-      <label for="use_existing_card_yes">
-        <%= 'Use a Credit Card' %>
-      </label>
-    </div>
-
-    <% if @payment_sources.present? %>
-
-
-      <div id="existing_cards" style="margin-left:30px;">
-        <p class="form-group" data-hook="existing_cards">
+    <div class="form-group">
+      <% if @payment_sources.present? %>
           <table class="existing-credit-card-list" data-hook="existing_cards">
             <tbody>
-              <% @payment_sources.each do |card| %>
+            <% @payment_sources.each do |card| %>
                 <tr id="<%= dom_id(card,'spree')%>" class="<%= cycle('even', 'odd') %>">
                   <td>
                     <%= radio_button_tag "order[existing_card]", card.id, (card == @payment_sources.first), { class: "existing-cc-radio" }  %>
                   </td>
                   <td>
-                    <span class="cc-type">
-                      <% unless (cc_type = card.cc_type).blank? %>
-                        <%= image_tag "credit_cards/icons/#{cc_type}.png" %>
-                      <% end %>
-                      <% if card.last_digits %>
-                        <%= Spree.t(:ending_in) %> <%= card.last_digits %>
-                      <% end %>
-                    </span> (<span class="full-name"><%= card.name %></span>)
+                  <span class="cc-type">
+                    <% unless (cc_type = card.cc_type).blank? %>
+                      <%= image_tag "credit_cards/icons/#{cc_type}.png" %>
+                    <% end %>
+                    <% if card.last_digits %>
+                      <%= Spree.t(:ending_in) %> <%= card.last_digits %>
+                    <% end %>
+                  </span> (<span class="full-name"><%= card.name %></span>)
                   </td>
                 </tr>
-              <% end %>
+            <% end %>
             </tbody>
           </table>
-        </p>
-      </div>
+      <% end %>
 
-
-    <% end %>
-
-      <button id="authorizenet-open-hosted-form" class="btn btn-default" style="margin-left:30px;">
+      <button id="authorizenet-open-hosted-form" class="btn btn-default">
         <%= Spree.t('authorizenet_hosted_cim.add_new_payment_method') %>
       </button>
+    </div>
 
-    <br/>
-    <br/>
-    <%= radio_button_tag 'use_existing_card', 'no' %>
-    <label for="use_existing_card_no">
-      <%= 'Use a Purchase Order' %>
-    </label>
-    <p>When using a purchase order, you will enter the PO Number and upload a copy of your purchase order at the confirm step of checkout.</p>
+    <%= render partial: 'spree/checkout/payment/storecredit' %>
 
-
-
-  </div>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Coupon</h3>
-  </div>
-  <div class="panel-body">
-      <p class='field' data-hook='coupon_code'>
-        <%= form.label :coupon_code %>
-        <%= form.text_field :coupon_code, :class => 'form-control' %>
-      </p>
+    <p class='field' data-hook='coupon_code'>
+      <%= form.label :coupon_code %>
+      <%= form.text_field :coupon_code, :class => 'form-control' %>
+    </p>
   </div>
 </div>
 
