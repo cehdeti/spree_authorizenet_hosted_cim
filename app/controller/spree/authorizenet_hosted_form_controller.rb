@@ -43,8 +43,8 @@ module Spree
         vmajor = varr[0]
 
         if vmajor >= 60
-          response.headers['X-Frame-Options'] = ''
-          response.headers['Content-Security-Policy'] = 'frame-ancestors'
+          response.headers.delete('X-Frame-Options')
+          response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         end
 
       end
