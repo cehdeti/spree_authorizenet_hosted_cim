@@ -7,7 +7,6 @@ module Spree
     after_action :change_xframe_opts
 
     def iframe
-      puts("HEllllllloestuhosetuhsntoheunshOEntsuhTNOEuNSHOeuthOSNTEUH")
     end
 
     def add_payment
@@ -32,16 +31,11 @@ module Spree
     end
 
     def change_xframe_opts
-      puts("CHANGING XFRAME OPTS!")
 
       user_agent = UserAgent.parse(request.user_agent)
-      puts("User agent: #{user_agent}")
-
       if user_agent.browser == 'Chrome'
-
         varr = user_agent.version.to_a
         vmajor = varr[0]
-
         if vmajor >= 60
           response.headers.delete('X-Frame-Options')
           response.headers['Content-Security-Policy'] = "frame-ancestors https://*.educationaltechnologyinnovations.com https://*.umn.edu https://*.authorize.net"
