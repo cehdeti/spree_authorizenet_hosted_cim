@@ -44,7 +44,7 @@ module Spree
 
         if vmajor >= 60
           response.headers.delete('X-Frame-Options')
-          response.headers['Content-Security-Policy'] = "frame-ancestors https://*.educationaltechnologyinnovations.com https://*.umn.edu"
+          response.headers['Content-Security-Policy'] = "frame-ancestors https://*.educationaltechnologyinnovations.com https://*.umn.edu https://*.authorize.net"
         end
 
       end
