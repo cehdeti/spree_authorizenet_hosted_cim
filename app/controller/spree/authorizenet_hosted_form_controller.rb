@@ -4,6 +4,8 @@ module Spree
 
     before_action :check_customer_id, only: :add_payment
 
+    after_action :change_xframe_opts
+
     def iframe
     end
 
@@ -26,6 +28,20 @@ module Spree
     def check_customer_id
       return if session[:authorizenet_customer_id]
       render json: { error: 'No customer ID present' }, status: :unprocessable_entity
+    end
+
+    def change_xframe_opts
+
+      user_agent = UserAgent.parse(request.user_agent)
+      if user_agent.browser == 'Chrome'
+        varr = user_agent.version.to_a
+        vmajor = varr[0]
+        if vmajor >= 60
+          response.headers.delete('X-Frame-Options')
+          response.headers['Content-Security-Policy'] = "frame-ancestors https://*.educationaltechnologyinnovations.com https://*.umn.edu https://*.authorize.net"
+        end
+
+      end
     end
   end
 end

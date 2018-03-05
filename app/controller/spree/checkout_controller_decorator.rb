@@ -1,6 +1,8 @@
 Spree::CheckoutController.class_eval do
   before_action :load_authorizenet_hosted_form, only: :edit
 
+  after_action :change_xframe_opts
+
   private
 
   def load_authorizenet_hosted_form
@@ -54,4 +56,20 @@ Spree::CheckoutController.class_eval do
       end
     end
   end
+
+
+  def change_xframe_opts
+
+    user_agent = UserAgent.parse(request.user_agent)
+    if user_agent.browser == 'Chrome'
+      varr = user_agent.version.to_a
+      vmajor = varr[0]
+      if vmajor >= 60
+        response.headers.delete('X-Frame-Options')
+        response.headers['Content-Security-Policy'] = "frame-ancestors https://*.educationaltechnologyinnovations.com https://*.umn.edu https://*.authorize.net"
+      end
+
+    end
+  end
+
 end

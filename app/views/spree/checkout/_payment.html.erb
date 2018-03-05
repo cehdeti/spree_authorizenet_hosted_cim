@@ -5,14 +5,14 @@
   <div class="panel-body" data-hook="checkout_payment_step">
     <div class="form-group">
       <% if @payment_sources.present? %>
-        <table class="existing-credit-card-list" data-hook="existing_cards">
-          <tbody>
+          <table class="existing-credit-card-list" data-hook="existing_cards">
+            <tbody>
             <% @payment_sources.each do |card| %>
-              <tr id="<%= dom_id(card,'spree')%>" class="<%= cycle('even', 'odd') %>">
-                <td>
-                  <%= radio_button_tag "order[existing_card]", card.id, (card == @payment_sources.first), { class: "existing-cc-radio" }  %>
-                </td>
-                <td>
+                <tr id="<%= dom_id(card,'spree')%>" class="<%= cycle('even', 'odd') %>">
+                  <td>
+                    <%= radio_button_tag "order[existing_card]", card.id, (card == @payment_sources.first), { class: "existing-cc-radio" }  %>
+                  </td>
+                  <td>
                   <span class="cc-type">
                     <% unless (cc_type = card.cc_type).blank? %>
                       <%= image_tag "credit_cards/icons/#{cc_type}.png" %>
@@ -21,11 +21,11 @@
                       <%= Spree.t(:ending_in) %> <%= card.last_digits %>
                     <% end %>
                   </span> (<span class="full-name"><%= card.name %></span>)
-                </td>
-              </tr>
+                  </td>
+                </tr>
             <% end %>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
       <% end %>
 
       <button id="authorizenet-open-hosted-form" class="btn btn-default">
