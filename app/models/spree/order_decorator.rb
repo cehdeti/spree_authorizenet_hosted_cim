@@ -45,24 +45,7 @@ Spree::Order.class_eval do
   end
 
   def address_from_payments
-    logger.debug "GETTING ADDRESS FROM PAYMENST #{payments.count}"
-    payment=nil
-    address=nil
-    payments.each do |p|
-      logger.debug "GOING THROUGH PAYMENT: #{p} #{p.source}"
-      if p.source.present? && p.source.address_id.present?
-        logger.debug "found payment with source!"
-        payment=p
-        logger.debug "payment is : #{payment}"
-        break
-      end
-    end
-    if payment
-      logger.debug "we have payment:: #{payment}"
-      address=Spree::Address.find(payment.source.address_id) if payment.source.address_id
-      logger.debug "had payment, now found the address: #{address}"
-      return address
-    end
-    return nil
+    payment = payments.find { |p| p.source.present? && p.source.address_id.present? }
+    Spree::Address.find(payment.source.address_id) if payment && payment.source.address_id
   end
 end

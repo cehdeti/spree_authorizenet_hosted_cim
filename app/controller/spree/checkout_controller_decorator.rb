@@ -41,35 +41,29 @@ Spree::CheckoutController.class_eval do
   raise "`before_confirm` method already imeplement in `spree_frontend`" \
     if method_defined?(:before_confirm) || private_method_defined?(:before_confirm)
 
-  #this extension puts normal spree before_payment functionality in before_confirm
-  #the Spree Product Assembly extension doesn't want anything in before_payment
-  #so check if SpreeProductAssembly is installed and don't do anything if it is
-  #note, this may cause issues in the case where someone is using the Stock functionality
+  # this extension puts normal spree before_payment functionality in before_confirm
+  # the Spree Product Assembly extension doesn't want anything in before_payment
+  # so check if SpreeProductAssembly is installed and don't do anything if it is
+  # note, this may cause issues in the case where someone is using the Stock functionality
   def before_confirm
-    if !defined?(SpreeProductAssembly)
-      if @order.checkout_steps.include? "delivery"
-        packages = @order.shipments.map(&:to_package)
-        @differentiator = Spree::Stock::Differentiator.new(@order, packages)
-        @differentiator.missing.each do |variant, quantity|
-          @order.contents.remove(variant, quantity)
-        end
-      end
+    return if defined?(SpreeProductAssembly)
+    return unless @order.checkout_steps.include? 'delivery'
+
+    packages = @order.shipments.map(&:to_package)
+    @differentiator = Spree::Stock::Differentiator.new(@order, packages)
+    @differentiator.missing.each do |variant, quantity|
+      @order.contents.remove(variant, quantity)
     end
   end
-
 
   def change_xframe_opts
-
     user_agent = UserAgent.parse(request.user_agent)
-    if user_agent.browser == 'Chrome'
-      varr = user_agent.version.to_a
-      vmajor = varr[0]
-      if vmajor >= 60
-        response.headers.delete('X-Frame-Options')
-        response.headers['Content-Security-Policy'] = "frame-ancestors https://*.educationaltechnologyinnovations.com https://*.umn.edu https://*.authorize.net"
-      end
+    return unless user_agent.browser == 'Chrome'
 
-    end
+    major_version = user_agent.version.to_a[0]
+    return unless major_version >= 60
+
+    response.headers.delete('X-Frame-Options')
+    response.headers['Content-Security-Policy'] = "frame-ancestors https://*.educationaltechnologyinnovations.com https://*.umn.edu https://*.authorize.net"
   end
-
 end
