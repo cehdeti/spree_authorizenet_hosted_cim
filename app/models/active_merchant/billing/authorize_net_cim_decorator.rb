@@ -8,8 +8,8 @@ ActiveMerchant::Billing::AuthorizeNetCimGateway::CIM_ACTIONS[:get_hosted_profile
 ActiveMerchant::Billing::AuthorizeNetCimGateway.class_eval do
   class_attribute :test_hosted_form_url, :live_hosted_form_url
 
-  self.test_hosted_form_url = 'https://test.authorize.net/profile'
-  self.live_hosted_form_url = 'https://secure.authorize.net/profile'
+  self.test_hosted_form_url = 'https://test.authorize.net/customer'
+  self.live_hosted_form_url = 'https://accept.authorize.net/customer'
 
   # Retrieve a hosted form token for a given customer.
   #
