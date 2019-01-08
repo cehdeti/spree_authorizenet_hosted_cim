@@ -31,14 +31,8 @@ module Spree
     end
 
     def change_xframe_opts
-      user_agent = UserAgent.parse(request.user_agent)
-      return unless user_agent.browser == 'Chrome'
-
-      major_version = user_agent.version.to_a[0]
-      return unless major_version >= 60
-
       response.headers.delete('X-Frame-Options')
-      response.headers['Content-Security-Policy'] = 'frame-ancestors https://*.educationaltechnologyinnovations.com https://*.umn.edu https://*.authorize.net'
+      response.headers['Content-Security-Policy'] = 'frame-ancestors https://*.authorize.net'
     end
   end
 end
